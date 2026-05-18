@@ -207,7 +207,7 @@ npm run dev
 
 This runs the example Convex backend and rebuilds the component when `src/` changes.
 
-The example app lives in [example/README.md](/Users/kesku/Documents/exa-integrations/exa-convex/example/README.md) and includes:
+The example app lives in [example/README.md](/example/README.md) and includes:
 
 - `searchNews` for general web retrieval
 - `deepResearch` for structured deep search
