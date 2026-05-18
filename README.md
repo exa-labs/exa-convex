@@ -207,8 +207,19 @@ npm run dev
 
 This runs the example Convex backend and rebuilds the component when `src/` changes.
 
-The example app lives in [example/README.md](/example/README.md) and includes:
+See [example/README.md](/example/README.md) for a walkthrough of the example app, which demonstrates:
 
-- `searchNews` for general web retrieval
-- `deepResearch` for structured deep search
-- `fetchKnownPage` for known-URL contents extraction
+- `searchNews`: Retrieve general web results based on queries.
+- `deepResearch`: Perform structured and schema-driven deep search.
+- `fetchKnownPage`: Extract contents from a specific, known URL.
+
+These example actions highlight key parameters you’ll likely want to adjust in your own application, such as:
+
+- Filtering by domain
+- Including or excluding text via text filters
+- Setting the number of results to return
+- Choosing a search mode
+- Selecting a content mode (`highlights`, `text`, or `summary`)
+- Limiting document recency with `maxAgeHours`
+
+See [the Exa API Docs](https://docs.exa.ai) for full reference on the available parameters and capabilities.

@@ -39,17 +39,30 @@ With `npx convex dev` still running, open another terminal and run:
 **General search**
 
 ```bash
-npx convex run example:searchNews '{"query": "recent llm launches"}'
+npx convex run example:searchNews '{
+  "query": "recent llm launches",
+  "includeDomains": ["openai.com", "anthropic.com"],
+  "contentMode": "highlights",
+  "maxAgeHours": 24
+}'
 ```
 
 **Structured deep search**
 
 ```bash
-npx convex run example:deepResearch '{"query": "recent AI startup funding announcements"}'
+npx convex run example:deepResearch '{
+  "query": "recent AI startup funding announcements",
+  "includeDomains": ["techcrunch.com", "crunchbase.com"],
+  "maxAgeHours": 72
+}'
 ```
 
 **Known URL contents**
 
 ```bash
-npx convex run example:fetchKnownPage '{"url": "https://exa.ai/docs"}'
+npx convex run example:fetchKnownPage '{
+  "url": "https://exa.ai/docs",
+  "contentMode": "text",
+  "maxAgeHours": 12
+}'
 ```
