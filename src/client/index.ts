@@ -94,25 +94,25 @@ export class ExaClient {
   constructor(private component: ComponentApi) {}
 
   async search(ctx: ActionCtx, args: SearchArgs) {
-    return await ctx.runAction(
-      this.component.lib.search,
-      args as unknown as Record<string, unknown>,
-    );
+    return await ctx.runAction(this.component.lib.search, args);
   }
 
   async deepSearch<TSchema extends z.ZodTypeAny>(
     ctx: ActionCtx,
     args: DeepSearchArgs | DeepSearchSchemaArgs<TSchema>,
   ) {
-    const payload =
+    const payload: DeepSearchArgs =
       "schema" in args
-        ? {
-            ...args,
-            outputSchema: zodToJsonSchema(args.schema, {
-              target: "jsonSchema7",
-            }) as JsonValue,
-            type: args.type ?? "deep",
-          }
+        ? (() => {
+            const { schema, ...rest } = args;
+            return {
+              ...rest,
+              outputSchema: zodToJsonSchema(schema, {
+                target: "jsonSchema7",
+              }) as JsonValue,
+              type: args.type ?? "deep",
+            };
+          })()
         : {
             ...args,
             type: args.type ?? "deep",
@@ -128,20 +128,10 @@ export class ExaClient {
       );
     }
 
-    if ("schema" in payload) {
-      delete (payload as { schema?: z.ZodTypeAny }).schema;
-    }
-
-    return await ctx.runAction(
-      this.component.lib.deepSearch,
-      payload as unknown as Record<string, unknown>,
-    );
+    return await ctx.runAction(this.component.lib.deepSearch, payload);
   }
 
   async contents(ctx: ActionCtx, args: ContentsArgs) {
-    return await ctx.runAction(
-      this.component.lib.contents,
-      args as unknown as Record<string, unknown>,
-    );
+    return await ctx.runAction(this.component.lib.contents, args);
   }
 }
