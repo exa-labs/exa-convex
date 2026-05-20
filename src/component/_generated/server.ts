@@ -29,8 +29,13 @@ import {
   internalQueryGeneric,
 } from "convex/server";
 import type { DataModel } from "./dataModel.js";
-export const env: Record<string, string | undefined> =
-  process.env as Record<string, string | undefined>;
+
+/**
+ * Typesafe environment variables declared in `convex.config.ts`.
+ */
+type Env = {
+  readonly EXA_API_KEY: string;
+};
 
 /**
  * Define a query in this Convex app's public API.
@@ -108,6 +113,7 @@ export const internalAction: ActionBuilder<DataModel, "internal"> =
  * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
  */
 export const httpAction: HttpActionBuilder = httpActionGeneric;
+export const env: Env = process.env as unknown as Env;
 
 /**
  * A set of services for use within Convex query functions.
