@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { action, env } from "./_generated/server.js";
 
 const EXA_BASE_URL = "https://api.exa.ai";
+const EXA_INTEGRATION_NAME = "convex-exa";
 
 const searchTypeValidator = v.union(
   v.literal("auto"),
@@ -126,14 +127,19 @@ function buildContentsBody(args: ContentsArgs) {
   };
 }
 
+function buildExaHeaders(apiKey: string) {
+  return {
+    "Content-Type": "application/json",
+    "x-api-key": apiKey,
+    "x-exa-integration": EXA_INTEGRATION_NAME,
+  };
+}
+
 async function callExaApi(endpoint: "/search" | "/contents", body: unknown) {
   const apiKey = getApiKey();
   const response = await fetch(`${EXA_BASE_URL}${endpoint}`, {
     method: "POST",
-    headers: new Headers({
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-    }),
+    headers: new Headers(buildExaHeaders(apiKey)),
     body: JSON.stringify(body),
   });
 
@@ -236,4 +242,5 @@ export const _test = {
   buildSearchBody,
   buildDeepSearchBody,
   buildContentsBody,
+  buildExaHeaders,
 };
