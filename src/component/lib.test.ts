@@ -47,4 +47,12 @@ describe("component helpers", () => {
       maxAgeHours: 12,
     });
   });
+
+  test("Exa API calls include Convex integration headers", () => {
+    expect(_test.buildExaHeaders("test-key")).toEqual({
+      "Content-Type": "application/json",
+      "x-api-key": "test-key",
+      "x-exa-integration": "convex-exa",
+    });
+  });
 });
