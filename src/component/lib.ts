@@ -82,8 +82,6 @@ type SearchArgs = {
   excludeText?: string[];
   startPublishedDate?: string;
   endPublishedDate?: string;
-  startCrawlDate?: string;
-  endCrawlDate?: string;
   userLocation?: string;
   contents?: Record<string, unknown>;
 };
@@ -191,8 +189,6 @@ export const search = action({
     excludeText: v.optional(v.array(v.string())),
     startPublishedDate: v.optional(v.string()),
     endPublishedDate: v.optional(v.string()),
-    startCrawlDate: v.optional(v.string()),
-    endCrawlDate: v.optional(v.string()),
     userLocation: v.optional(v.string()),
     contents: searchContentsValidator,
   },
@@ -214,8 +210,6 @@ export const deepSearch = action({
     excludeText: v.optional(v.array(v.string())),
     startPublishedDate: v.optional(v.string()),
     endPublishedDate: v.optional(v.string()),
-    startCrawlDate: v.optional(v.string()),
-    endCrawlDate: v.optional(v.string()),
     userLocation: v.optional(v.string()),
     contents: searchContentsValidator,
     systemPrompt: v.optional(v.string()),
