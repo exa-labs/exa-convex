@@ -49,8 +49,6 @@ export interface SearchArgs {
   excludeText?: string[];
   startPublishedDate?: string;
   endPublishedDate?: string;
-  startCrawlDate?: string;
-  endCrawlDate?: string;
   userLocation?: string;
   contents?: SearchContentsOptions;
 }

@@ -134,7 +134,7 @@ await exa.deepSearch(ctx, {
 - `schema` - Zod schema for structured output (converted to JSON Schema for Exa)
 - `outputSchema` - Raw JSON Schema instead of Zod
 - `systemPrompt` - Optional guidance for the deep search model
-- `mode` - One of `deep-lite`, `deep`, `deep-reasoning`
+- `type` - One of `deep-lite`, `deep`, `deep-reasoning`
 
 **Returns:** Exa search response; structured fields follow your schema when provided
 

@@ -111,7 +111,6 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   verbosity?: "low" | "medium" | "high";
                 };
           };
-          endCrawlDate?: string;
           endPublishedDate?: string;
           excludeDomains?: Array<string>;
           excludeText?: Array<string>;
@@ -120,7 +119,6 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           numResults?: number;
           outputSchema?: any;
           query: string;
-          startCrawlDate?: string;
           startPublishedDate?: string;
           systemPrompt?: string;
           type?: "deep-lite" | "deep" | "deep-reasoning";
@@ -171,7 +169,6 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   verbosity?: "low" | "medium" | "high";
                 };
           };
-          endCrawlDate?: string;
           endPublishedDate?: string;
           excludeDomains?: Array<string>;
           excludeText?: Array<string>;
@@ -179,7 +176,6 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           includeText?: Array<string>;
           numResults?: number;
           query: string;
-          startCrawlDate?: string;
           startPublishedDate?: string;
           type?:
             | "auto"
