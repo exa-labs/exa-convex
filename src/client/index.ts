@@ -109,7 +109,8 @@ export interface SynthesisOutput<TContent = unknown> {
   grounding: Array<{
     field: string;
     citations: Array<{
-      type: string;
+      type?: string;
+      title?: string;
       url?: string;
       exactQuote?: string;
     }>;
@@ -120,6 +121,16 @@ export interface SynthesisOutput<TContent = unknown> {
 export interface SearchResponse<TOutputContent = unknown> {
   requestId?: string;
   resolvedSearchType?: string;
+  searchTime?: number;
+  effectiveFilters?: {
+    includeDomains?: string[];
+    excludeDomains?: string[];
+    includeUrls?: string[];
+    excludeUrls?: string[];
+    includeText?: string[];
+    excludeText?: string[];
+  };
+  requestTags?: unknown;
   results: SearchResult[];
   costDollars?: {
     total?: number;

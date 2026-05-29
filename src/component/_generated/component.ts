@@ -39,6 +39,16 @@ type SearchResult = {
 type SearchResponse = {
   requestId?: string;
   resolvedSearchType?: string;
+  searchTime?: number;
+  effectiveFilters?: {
+    includeDomains?: Array<string>;
+    excludeDomains?: Array<string>;
+    includeUrls?: Array<string>;
+    excludeUrls?: Array<string>;
+    includeText?: Array<string>;
+    excludeText?: Array<string>;
+  };
+  requestTags?: any;
   results: Array<SearchResult>;
   costDollars?: {
     total?: number;
@@ -48,7 +58,8 @@ type SearchResponse = {
     grounding: Array<{
       field: string;
       citations: Array<{
-        type: string;
+        type?: string;
+        title?: string;
         url?: string;
         exactQuote?: string;
       }>;

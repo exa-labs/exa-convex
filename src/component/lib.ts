@@ -105,7 +105,8 @@ const synthesisOutputValidator = v.object({
       field: v.string(),
       citations: v.array(
         v.object({
-          type: v.string(),
+          type: v.optional(v.string()),
+          title: v.optional(v.string()),
           url: v.optional(v.string()),
           exactQuote: v.optional(v.string()),
         }),
@@ -118,6 +119,18 @@ const synthesisOutputValidator = v.object({
 const searchReturnValidator = v.object({
   requestId: v.optional(v.string()),
   resolvedSearchType: v.optional(v.string()),
+  searchTime: v.optional(v.number()),
+  effectiveFilters: v.optional(
+    v.object({
+      includeDomains: v.optional(v.array(v.string())),
+      excludeDomains: v.optional(v.array(v.string())),
+      includeUrls: v.optional(v.array(v.string())),
+      excludeUrls: v.optional(v.array(v.string())),
+      includeText: v.optional(v.array(v.string())),
+      excludeText: v.optional(v.array(v.string())),
+    }),
+  ),
+  requestTags: v.optional(v.any()),
   results: v.array(searchResultValidator),
   costDollars: costDollarsValidator,
   output: v.optional(synthesisOutputValidator),
