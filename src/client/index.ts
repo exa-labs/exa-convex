@@ -78,43 +78,115 @@ export interface ContentsArgs {
   };
 }
 
-export type ActionCtx = Pick<
-  GenericActionCtx<GenericDataModel>,
-  "runAction"
->;
+export interface SearchResult {
+  title: string;
+  url: string;
+  publishedDate?: string;
+  author?: string | null;
+  id?: string;
+  image?: string;
+  favicon?: string;
+  text?: string;
+  highlights?: string[];
+  highlightScores?: number[];
+  summary?: string;
+  subpages?: Array<{
+    title: string;
+    url: string;
+    publishedDate?: string;
+    author?: string | null;
+    id?: string;
+    image?: string;
+    favicon?: string;
+  }>;
+  extras?: {
+    links?: string[];
+  };
+}
 
-export interface DeepSearchSchemaArgs<TSchema extends z.ZodTypeAny>
-  extends Omit<DeepSearchArgs, "outputSchema"> {
+export interface SynthesisOutput<TContent = unknown> {
+  content: TContent;
+  grounding: Array<{
+    field: string;
+    citations: Array<{
+      type: string;
+      url?: string;
+      exactQuote?: string;
+    }>;
+    confidence: string;
+  }>;
+}
+
+export interface SearchResponse<TOutputContent = unknown> {
+  requestId?: string;
+  resolvedSearchType?: string;
+  results: SearchResult[];
+  costDollars?: {
+    total?: number;
+  };
+  output?: SynthesisOutput<TOutputContent>;
+}
+
+export interface ContentsResponse {
+  requestId?: string;
+  results: SearchResult[];
+  costDollars?: {
+    total?: number;
+  };
+}
+
+export type ActionCtx = Pick<GenericActionCtx<GenericDataModel>, "runAction">;
+
+export interface DeepSearchSchemaArgs<
+  TSchema extends z.ZodTypeAny,
+> extends Omit<DeepSearchArgs, "outputSchema"> {
   schema: TSchema;
 }
 
 export class ExaClient {
   constructor(private component: ComponentApi) {}
 
-  async search(ctx: ActionCtx, args: SearchArgs) {
+  async search(ctx: ActionCtx, args: SearchArgs): Promise<SearchResponse> {
     return await ctx.runAction(this.component.lib.search, args);
   }
 
   async deepSearch<TSchema extends z.ZodTypeAny>(
     ctx: ActionCtx,
+    args: DeepSearchSchemaArgs<TSchema>,
+  ): Promise<
+    SearchResponse<z.infer<TSchema>> & {
+      output: SynthesisOutput<z.infer<TSchema>>;
+    }
+  >;
+  async deepSearch(
+    ctx: ActionCtx,
+    args: DeepSearchArgs,
+  ): Promise<SearchResponse>;
+  async deepSearch<TSchema extends z.ZodTypeAny>(
+    ctx: ActionCtx,
     args: DeepSearchArgs | DeepSearchSchemaArgs<TSchema>,
-  ) {
-    const payload: DeepSearchArgs =
-      "schema" in args
-        ? (() => {
-            const { schema, ...rest } = args;
-            return {
-              ...rest,
-              outputSchema: zodToJsonSchema(schema, {
-                target: "jsonSchema7",
-              }) as JsonValue,
-              type: args.type ?? "deep",
-            };
-          })()
-        : {
-            ...args,
+  ): Promise<
+    | SearchResponse
+    | (SearchResponse<z.infer<TSchema>> & {
+        output: SynthesisOutput<z.infer<TSchema>>;
+      })
+  > {
+    const hasSchema = "schema" in args;
+    const payload: DeepSearchArgs = hasSchema
+      ? (() => {
+          const { schema, ...rest } = args;
+          return {
+            ...rest,
+            outputSchema: zodToJsonSchema(schema, {
+              target: "jsonSchema7",
+            }) as JsonValue,
             type: args.type ?? "deep",
           };
+        })()
+      : {
+          ...args,
+          type: args.type ?? "deep",
+        };
 
     if (
       payload.type !== "deep" &&
@@ -126,10 +198,21 @@ export class ExaClient {
       );
     }
 
-    return await ctx.runAction(this.component.lib.deepSearch, payload);
+    const response = await ctx.runAction(
+      this.component.lib.deepSearch,
+      payload,
+    );
+    return hasSchema
+      ? (response as SearchResponse<z.infer<TSchema>> & {
+          output: SynthesisOutput<z.infer<TSchema>>;
+        })
+      : response;
   }
 
-  async contents(ctx: ActionCtx, args: ContentsArgs) {
+  async contents(
+    ctx: ActionCtx,
+    args: ContentsArgs,
+  ): Promise<ContentsResponse> {
     return await ctx.runAction(this.component.lib.contents, args);
   }
 }

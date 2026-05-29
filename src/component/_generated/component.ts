@@ -10,6 +10,61 @@
 
 import type { FunctionReference } from "convex/server";
 
+type SearchResult = {
+  title: string;
+  url: string;
+  publishedDate?: string;
+  author?: string | null;
+  id?: string;
+  image?: string;
+  favicon?: string;
+  text?: string;
+  highlights?: Array<string>;
+  highlightScores?: Array<number>;
+  summary?: string;
+  subpages?: Array<{
+    title: string;
+    url: string;
+    publishedDate?: string;
+    author?: string | null;
+    id?: string;
+    image?: string;
+    favicon?: string;
+  }>;
+  extras?: {
+    links?: Array<string>;
+  };
+};
+
+type SearchResponse = {
+  requestId?: string;
+  resolvedSearchType?: string;
+  results: Array<SearchResult>;
+  costDollars?: {
+    total?: number;
+  };
+  output?: {
+    content: any;
+    grounding: Array<{
+      field: string;
+      citations: Array<{
+        type: string;
+        url?: string;
+        exactQuote?: string;
+      }>;
+      confidence: string;
+    }>;
+  };
+};
+
+type ContentsResponse = {
+  requestId?: string;
+  results: Array<SearchResult>;
+  costDollars?: {
+    total?: number;
+  };
+};
+
 /**
  * A utility for referencing a Convex component's exposed API.
  *
@@ -66,7 +121,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
               };
           urls?: Array<string>;
         },
-        any,
+        ContentsResponse,
         Name
       >;
       deepSearch: FunctionReference<
@@ -124,7 +179,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
           type?: "deep-lite" | "deep" | "deep-reasoning";
           userLocation?: string;
         },
-        any,
+        SearchResponse,
         Name
       >;
       search: FunctionReference<
@@ -186,7 +241,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
             | "deep-reasoning";
           userLocation?: string;
         },
-        any,
+        SearchResponse,
         Name
       >;
     };

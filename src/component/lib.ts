@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { v, type Infer } from "convex/values";
 import { action, env } from "./_generated/server.js";
 
 const EXA_BASE_URL = "https://api.exa.ai";
@@ -67,6 +67,70 @@ const contentsArgsValidator = {
   subpageTarget: v.optional(v.union(v.string(), v.array(v.string()))),
   extras: extrasValidator,
 };
+
+const costDollarsValidator = v.optional(
+  v.object({
+    total: v.optional(v.number()),
+  }),
+);
+
+const baseSearchResultValidator = {
+  title: v.string(),
+  url: v.string(),
+  publishedDate: v.optional(v.string()),
+  author: v.optional(v.union(v.string(), v.null())),
+  id: v.optional(v.string()),
+  image: v.optional(v.string()),
+  favicon: v.optional(v.string()),
+};
+
+const searchResultValidator = v.object({
+  ...baseSearchResultValidator,
+  text: v.optional(v.string()),
+  highlights: v.optional(v.array(v.string())),
+  highlightScores: v.optional(v.array(v.number())),
+  summary: v.optional(v.string()),
+  subpages: v.optional(v.array(v.object(baseSearchResultValidator))),
+  extras: v.optional(
+    v.object({
+      links: v.optional(v.array(v.string())),
+    }),
+  ),
+});
+
+const synthesisOutputValidator = v.object({
+  content: v.any(),
+  grounding: v.array(
+    v.object({
+      field: v.string(),
+      citations: v.array(
+        v.object({
+          type: v.string(),
+          url: v.optional(v.string()),
+          exactQuote: v.optional(v.string()),
+        }),
+      ),
+      confidence: v.string(),
+    }),
+  ),
+});
+
+const searchReturnValidator = v.object({
+  requestId: v.optional(v.string()),
+  resolvedSearchType: v.optional(v.string()),
+  results: v.array(searchResultValidator),
+  costDollars: costDollarsValidator,
+  output: v.optional(synthesisOutputValidator),
+});
+
+const contentsReturnValidator = v.object({
+  requestId: v.optional(v.string()),
+  results: v.array(searchResultValidator),
+  costDollars: costDollarsValidator,
+});
+
+type SearchReturn = Infer<typeof searchReturnValidator>;
+type ContentsReturn = Infer<typeof contentsReturnValidator>;
 
 type JsonPrimitive = string | number | boolean | null;
 type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
@@ -192,9 +256,12 @@ export const search = action({
     userLocation: v.optional(v.string()),
     contents: searchContentsValidator,
   },
-  returns: v.any(),
+  returns: searchReturnValidator,
   handler: async (_ctx, args) => {
-    return await callExaApi("/search", buildSearchBody(args as SearchArgs));
+    return (await callExaApi(
+      "/search",
+      buildSearchBody(args as SearchArgs),
+    )) as SearchReturn;
   },
 });
 
@@ -215,20 +282,23 @@ export const deepSearch = action({
     systemPrompt: v.optional(v.string()),
     outputSchema: v.optional(v.any()),
   },
-  returns: v.any(),
+  returns: searchReturnValidator,
   handler: async (_ctx, args) => {
-    return await callExaApi(
+    return (await callExaApi(
       "/search",
       buildDeepSearchBody(args as DeepSearchArgs),
-    );
+    )) as SearchReturn;
   },
 });
 
 export const contents = action({
   args: contentsArgsValidator,
-  returns: v.any(),
+  returns: contentsReturnValidator,
   handler: async (_ctx, args) => {
-    return await callExaApi("/contents", buildContentsBody(args as ContentsArgs));
+    return (await callExaApi(
+      "/contents",
+      buildContentsBody(args as ContentsArgs),
+    )) as ContentsReturn;
   },
 });
 
