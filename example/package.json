@@ -1,0 +1,19 @@
+{
+  "name": "convex-exa-example",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx convex dev",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "convex": "^1.39.1",
+    "@exalabs/convex-exa": "file:..",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.12.2",
+    "typescript": "6.0.3"
+  }
+}
