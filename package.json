@@ -1,6 +1,6 @@
 {
   "name": "@exalabs/convex-exa",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convex component for web search and content extraction with Exa",
   "type": "module",
   "main": "./dist/client/index.js",
