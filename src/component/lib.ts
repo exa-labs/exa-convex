@@ -26,7 +26,11 @@ const contentSelectorValidator = v.optional(
       maxCharacters: v.optional(v.number()),
       includeHtmlTags: v.optional(v.boolean()),
       verbosity: v.optional(
-        v.union(v.literal("low"), v.literal("medium"), v.literal("high")),
+        v.union(
+          v.literal("compact"),
+          v.literal("standard"),
+          v.literal("full"),
+        ),
       ),
       includeSections: v.optional(v.array(v.string())),
       excludeSections: v.optional(v.array(v.string())),
@@ -68,79 +72,8 @@ const contentsArgsValidator = {
   extras: extrasValidator,
 };
 
-const costDollarsValidator = v.optional(
-  v.object({
-    total: v.optional(v.number()),
-  }),
-);
-
-const baseSearchResultValidator = {
-  title: v.string(),
-  url: v.string(),
-  publishedDate: v.optional(v.string()),
-  author: v.optional(v.union(v.string(), v.null())),
-  id: v.optional(v.string()),
-  image: v.optional(v.string()),
-  favicon: v.optional(v.string()),
-};
-
-const searchResultValidator = v.object({
-  ...baseSearchResultValidator,
-  text: v.optional(v.string()),
-  highlights: v.optional(v.array(v.string())),
-  highlightScores: v.optional(v.array(v.number())),
-  summary: v.optional(v.string()),
-  subpages: v.optional(v.array(v.object(baseSearchResultValidator))),
-  extras: v.optional(
-    v.object({
-      links: v.optional(v.array(v.string())),
-    }),
-  ),
-});
-
-const synthesisOutputValidator = v.object({
-  content: v.any(),
-  grounding: v.array(
-    v.object({
-      field: v.string(),
-      citations: v.array(
-        v.object({
-          type: v.optional(v.string()),
-          title: v.optional(v.string()),
-          url: v.optional(v.string()),
-          exactQuote: v.optional(v.string()),
-        }),
-      ),
-      confidence: v.string(),
-    }),
-  ),
-});
-
-const searchReturnValidator = v.object({
-  requestId: v.optional(v.string()),
-  resolvedSearchType: v.optional(v.string()),
-  searchTime: v.optional(v.number()),
-  effectiveFilters: v.optional(
-    v.object({
-      includeDomains: v.optional(v.array(v.string())),
-      excludeDomains: v.optional(v.array(v.string())),
-      includeUrls: v.optional(v.array(v.string())),
-      excludeUrls: v.optional(v.array(v.string())),
-      includeText: v.optional(v.array(v.string())),
-      excludeText: v.optional(v.array(v.string())),
-    }),
-  ),
-  requestTags: v.optional(v.any()),
-  results: v.array(searchResultValidator),
-  costDollars: costDollarsValidator,
-  output: v.optional(synthesisOutputValidator),
-});
-
-const contentsReturnValidator = v.object({
-  requestId: v.optional(v.string()),
-  results: v.array(searchResultValidator),
-  costDollars: costDollarsValidator,
-});
+const searchReturnValidator = v.any();
+const contentsReturnValidator = v.any();
 
 type SearchReturn = Infer<typeof searchReturnValidator>;
 type ContentsReturn = Infer<typeof contentsReturnValidator>;
