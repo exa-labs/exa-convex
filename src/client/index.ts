@@ -18,7 +18,7 @@ export type ContentSelection =
   | {
       maxCharacters?: number;
       includeHtmlTags?: boolean;
-      verbosity?: "low" | "medium" | "high";
+      verbosity?: "compact" | "standard" | "full";
       includeSections?: string[];
       excludeSections?: string[];
       query?: string;
@@ -101,7 +101,9 @@ export interface SearchResult {
   }>;
   extras?: {
     links?: string[];
+    imageLinks?: string[];
   };
+  entities?: unknown;
 }
 
 export interface SynthesisOutput<TContent = unknown> {
@@ -129,11 +131,19 @@ export interface SearchResponse<TOutputContent = unknown> {
     excludeUrls?: string[];
     includeText?: string[];
     excludeText?: string[];
+    category?: string;
+    startPublishedDate?: string;
+    endPublishedDate?: string;
+    [key: string]: unknown;
   };
   requestTags?: unknown;
   results: SearchResult[];
   costDollars?: {
     total?: number;
+    search?: unknown;
+    contents?: unknown;
+    summary?: unknown;
+    [key: string]: unknown;
   };
   output?: SynthesisOutput<TOutputContent>;
 }
@@ -143,7 +153,15 @@ export interface ContentsResponse {
   results: SearchResult[];
   costDollars?: {
     total?: number;
+    search?: unknown;
+    contents?: unknown;
+    summary?: unknown;
+    [key: string]: unknown;
   };
+  statuses?: unknown;
+  effectiveFilters?: unknown;
+  requestTags?: unknown;
+  searchTime?: number;
 }
 
 export type ActionCtx = Pick<GenericActionCtx<GenericDataModel>, "runAction">;

@@ -33,48 +33,14 @@ type SearchResult = {
   }>;
   extras?: {
     links?: Array<string>;
+    imageLinks?: Array<string>;
   };
+  entities?: any;
 };
 
-type SearchResponse = {
-  requestId?: string;
-  resolvedSearchType?: string;
-  searchTime?: number;
-  effectiveFilters?: {
-    includeDomains?: Array<string>;
-    excludeDomains?: Array<string>;
-    includeUrls?: Array<string>;
-    excludeUrls?: Array<string>;
-    includeText?: Array<string>;
-    excludeText?: Array<string>;
-  };
-  requestTags?: any;
-  results: Array<SearchResult>;
-  costDollars?: {
-    total?: number;
-  };
-  output?: {
-    content: any;
-    grounding: Array<{
-      field: string;
-      citations: Array<{
-        type?: string;
-        title?: string;
-        url?: string;
-        exactQuote?: string;
-      }>;
-      confidence: string;
-    }>;
-  };
-};
+type SearchResponse = any;
 
-type ContentsResponse = {
-  requestId?: string;
-  results: Array<SearchResult>;
-  costDollars?: {
-    total?: number;
-  };
-};
+type ContentsResponse = any;
 
 /**
  * A utility for referencing a Convex component's exposed API.
@@ -103,7 +69,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                 includeSections?: Array<string>;
                 maxCharacters?: number;
                 query?: string;
-                verbosity?: "low" | "medium" | "high";
+                verbosity?: "compact" | "standard" | "full";
               };
           ids?: Array<string>;
           livecrawlTimeout?: number;
@@ -118,7 +84,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                 includeSections?: Array<string>;
                 maxCharacters?: number;
                 query?: string;
-                verbosity?: "low" | "medium" | "high";
+                verbosity?: "compact" | "standard" | "full";
               };
           text?:
             | boolean
@@ -128,7 +94,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                 includeSections?: Array<string>;
                 maxCharacters?: number;
                 query?: string;
-                verbosity?: "low" | "medium" | "high";
+                verbosity?: "compact" | "standard" | "full";
               };
           urls?: Array<string>;
         },
@@ -150,7 +116,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
             livecrawlTimeout?: number;
             maxAgeHours?: number;
@@ -164,7 +130,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
             text?:
               | boolean
@@ -174,7 +140,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
           };
           endPublishedDate?: string;
@@ -208,7 +174,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
             livecrawlTimeout?: number;
             maxAgeHours?: number;
@@ -222,7 +188,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
             text?:
               | boolean
@@ -232,7 +198,7 @@ export type ComponentApi<Name extends string | undefined = string | undefined> =
                   includeSections?: Array<string>;
                   maxCharacters?: number;
                   query?: string;
-                  verbosity?: "low" | "medium" | "high";
+                  verbosity?: "compact" | "standard" | "full";
                 };
           };
           endPublishedDate?: string;
